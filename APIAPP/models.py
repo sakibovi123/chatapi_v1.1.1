@@ -29,15 +29,6 @@ class CustomUser(models.Model):
             super(CustomUser, self).save(*args, **kwargs)
 
 
-class Token(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.token
-
-    def save(self, *args, **kwargs):
-        super(Token, self).save(*args, **kwargs)
 
 
 class WelcomeMsgRoom(models.Model):

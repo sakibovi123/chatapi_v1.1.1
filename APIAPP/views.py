@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 import string
 import random
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 
 
 class AllAvailableUsers(APIView):
@@ -86,6 +88,9 @@ class PrivateRoomId(APIView):
 # Send MEssage
 
 class SendMessage(APIView):
+    permission_classes = [IsAuthenticated, ]
+    authentication_classes = [TokenAuthentication, ]
+
     def get_roomId(self, pk):
         try:
             return WelcomeMsgRoom.objects.get(pk=pk)
@@ -112,6 +117,13 @@ class SendMessage(APIView):
 class GetMessageByUser(APIView):
     def get_object(self, pk):
         return WelcomeMsgRoom.objects.get(pk=pk)
+    
+
+    def get(self, request, pk):
+        get_messageId = self.get_object(pk)
+        serializer = ChatRoomSerializer(get_messageId)
+        return Response(serializer.data)
+
 
     def get(self, pk, *args, **kwargs):
         room = self.get_object(pk)
